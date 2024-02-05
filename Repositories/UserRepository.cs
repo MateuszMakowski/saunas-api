@@ -16,6 +16,10 @@ public class UserRepository : IUserRepository
     {
         return await _users.Find<User>(user => user.Id == id).FirstOrDefaultAsync();
     }
+    public async Task<User> GetUserByEmail(string email)
+    {
+        return await _users.Find<User>(user => user.Email == email).FirstOrDefaultAsync();
+    }
 
     public async Task<IEnumerable<User>> GetAllUsers()
     {
@@ -35,5 +39,11 @@ public class UserRepository : IUserRepository
     public async Task DeleteUser(string id)
     {
         await _users.DeleteOneAsync(user => user.Id == id);
+    }
+
+    public async Task<bool> IsEmailUnique(string email)
+    {
+        var existingUser = await _users.Find(u => u.Email == email).FirstOrDefaultAsync();
+        return existingUser == null;
     }
 }
